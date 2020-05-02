@@ -21,7 +21,7 @@ Note - You do not need to export any variable for local development. You only ne
     make clean build configure run-local
 ```
 
-#### 3. Deploy on your AWS account
+#### 3. Deploy on your AWS account (Docker must be pre-installed)
 
 ```
     make clean build configure package validate deploy describe outputs
