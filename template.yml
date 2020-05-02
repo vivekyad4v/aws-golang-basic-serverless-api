@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  ParamProjectID:
+    Type: String
+  ParamProjectEnviron:
+    Type: String
+
+Globals:
+    Function:
+      Timeout: 20
+    Api:
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'content-type'"
+        AllowOrigin: "'*'"
+        AllowCredentials: "'*'"
+
+Resources:
+  LogGroup1:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: !Sub '${ParamProjectID}'
+      RetentionInDays: 180
+  
+  APIGateway1:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub '${ParamProjectID}'
+      StageName: !Ref ParamProjectEnviron
+      AccessLogSetting:
+        DestinationArn: !Ref LogGroup1
+  
+  Func1:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ParamProjectID}-hello'
+      Handler: src/hello/bin/hello
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway1
+            Path: /hello
+            Method: GET
+
+  Func2:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ParamProjectID}-stores'
+      Handler: src/stores/bin/stores
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref APIGateway1
+            Path: /stores/{id}
+            Method: GET
