@@ -7,9 +7,11 @@
 ##### Make sure your CLI session has authorized access to AWS account.
 
 #### 1. Export necessary variables
-``` export ORG_ID=foo
+``` 
+    export ORG_ID=foo
     export ENVIRON=uat
     export PROJECT_NAME=play-with-stores
+    
 ```
 Note - You do not need to export any variable for local development. You only need to change these variables while deploying it using CICD tools like Codepipeline, Jenkins, TravisCI etc.
 
@@ -22,17 +24,29 @@ Note - You do not need to export any variable for local development. You only ne
 #### 3. Deploy on your AWS account
 
 ```
-    make clean build configure package validate deploy describe 
+    make clean build configure package validate deploy describe outputs
 ```
 
-#### 4. Deploy on your AWS account
+You will get the API Gateway URL in the outputs something as below -
+ Ex - https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat
+
+Check your APIs on above URL using curl -
 
 ```
-    make clean build configure package validate deploy describe 
+    curl https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat/hello
+    curl https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat/stores/store?type=grocery
+    curl https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat/stores/store?type=fruit
+    curl https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat/stores/store?type=all
+    curl https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat/stores/store?type=doesnotexist
+    curl https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat/whateverthrowerror
+    
 ```
 
-#### 5. Destroy everything
+
+#### 4. Destroy everything
 
 ```
     make clean destroy 
 ```
+
+
