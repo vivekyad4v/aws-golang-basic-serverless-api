@@ -1,4 +1,4 @@
-# golang-serverless-basic-api
+# aws-golang-serverless-basic-api
 
 ##### CICD Golang serverless API on AWS using SAM
 
