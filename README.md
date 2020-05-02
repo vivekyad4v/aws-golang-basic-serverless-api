@@ -27,7 +27,7 @@ Note - You do not need to export any variable for local development. You only ne
     make clean build configure package validate deploy describe outputs
 ```
 
-You will get the API Gateway URL in the outputs something as below -
+You will get the API Gateway URL in the outputs something as below -    
  Ex - https://hahft1bb2c.execute-api.ap-south-1.amazonaws.com/uat
 
 Check your APIs on above URL using curl -
