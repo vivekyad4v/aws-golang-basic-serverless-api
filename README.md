@@ -42,6 +42,8 @@ Check your APIs on above URL using curl -
     
 ```
 
+Note - You can check application logs in Cloudwatch.
+
 
 #### 4. Destroy everything
 
