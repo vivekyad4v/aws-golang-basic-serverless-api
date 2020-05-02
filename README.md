@@ -24,3 +24,15 @@ Note - You do not need to export any variable for local development. You only ne
 ```
     make clean build configure package validate deploy describe 
 ```
+
+#### 4. Deploy on your AWS account
+
+```
+    make clean build configure package validate deploy describe 
+```
+
+#### 5. Destroy everything
+
+```
+    make clean destroy 
+```
