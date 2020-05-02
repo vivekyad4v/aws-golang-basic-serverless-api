@@ -25,7 +25,7 @@ package:
 		--template-file $(FILE_TEMPLATE) \
 		--s3-bucket $(AWS_BUCKET_NAME) \
 		--region $(AWS_REGION) \
-		--output-template-file $(FILE_PACKAGE)
+		--output-template-file $(FILE_PACKAGE) 1>/dev/null
 
 validate:
 	@ sam validate \
@@ -36,7 +36,7 @@ deploy:
 	@ sam deploy \
 		--template-file $(FILE_PACKAGE) \
 		--region $(AWS_REGION) \
-		--capabilities CAPABILITY_IAM \
+		--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
 		--stack-name $(PROJECT_ID) \
 		--parameter-overrides \
 			ParamProjectID=$(PROJECT_ID) \
@@ -46,6 +46,10 @@ describe:
 	@ aws cloudformation describe-stacks \
 		--region $(AWS_REGION) \
 		--stack-name $(PROJECT_ID)
+
+outputs:
+	@ make describe \
+		| jq -r '.Stacks[0].Outputs'
 
 destroy:
 	@ aws cloudformation delete-stack \

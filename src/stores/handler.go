@@ -34,13 +34,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Type:    "Grocery",
 		Items:   []string{"wheat", "rice", "pulse"},
 	}
-
 	Fs := FruitStore{
 		StoreID: 2,
 		Type:    "Fruits",
 		Items:   []string{"banana", "apple", "mango"},
 	}
-
 	showAll := AllStores{
 		Gs,
 		Fs,
@@ -57,13 +55,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	// /stores/store?type=grocery
-
 	ID := request.PathParameters["id"]
 	ST := request.QueryStringParameters["type"]
 	fmt.Println(ID, ST)
 
 	switch {
-
 	case ID == "store" && ST == "grocery":
 		return events.APIGatewayProxyResponse{
 			Headers: map[string]string{
@@ -72,7 +68,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			Body:       string(groceryJSON),
 			StatusCode: 200,
 		}, nil
-
 	case ID == "store" && ST == "fruit":
 		return events.APIGatewayProxyResponse{
 			Headers: map[string]string{

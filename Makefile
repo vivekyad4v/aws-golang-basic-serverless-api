@@ -1,4 +1,4 @@
-ORG_ID ?= hpy
+ORG_ID ?= my
 ENVIRON ?= local
 PROJECT_NAME ?= $(notdir $(CURDIR))
 PROJECT_ID ?= $(ORG_ID)-$(ENVIRON)-$(PROJECT_NAME)

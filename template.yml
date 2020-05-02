@@ -21,7 +21,7 @@ Resources:
   LogGroup1:
     Type: AWS::Logs::LogGroup
     Properties: 
-      LogGroupName: !Sub '${ParamProjectID}'
+      LogGroupName: !Sub '${ParamProjectID}-logs'
       RetentionInDays: 180
   
   APIGateway1:
@@ -30,7 +30,7 @@ Resources:
       Name: !Sub '${ParamProjectID}'
       StageName: !Ref ParamProjectEnviron
       AccessLogSetting:
-        DestinationArn: !Ref LogGroup1
+        DestinationArn: !GetAtt LogGroup1.Arn
   
   Func1:
     Type: AWS::Serverless::Function
@@ -61,3 +61,56 @@ Resources:
             RestApiId: !Ref APIGateway1
             Path: /stores/{id}
             Method: GET
+
+  ManagedPolicy1:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Sub '${ParamProjectID}-policy'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Sid: AllowCloudwatchAccess
+            Effect: Allow
+            Action:
+              - logs:*
+            Resource: !GetAtt LogGroup1.Arn
+          -
+            Sid: AllowLambdaAccess
+            Effect: Allow
+            Action:
+              - lambda:*
+            Resource: 
+              - !GetAtt Func1.Arn
+              - !GetAtt Func2.Arn
+
+  Role1:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub '${ParamProjectID}-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - !Ref ManagedPolicy1            
+
+Outputs:
+  URL:
+    Description: URL for HTTPS Endpoint
+    Value:
+      Fn::Join:
+        - ''
+        - - https://
+          - Ref: APIGateway1
+          - ".execute-api."
+          - Ref: AWS::Region
+          - ".amazonaws.com/"
+          - Ref: ParamProjectEnviron
