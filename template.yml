@@ -18,24 +18,23 @@ Globals:
         AllowCredentials: "'*'"
 
 Resources:
-  LogGroup1:
-    Type: AWS::Logs::LogGroup
-    Properties: 
-      LogGroupName: !Sub '${ParamProjectID}-logs'
-      RetentionInDays: 180
-  
   APIGateway1:
     Type: AWS::Serverless::Api
     Properties:
       Name: !Sub '${ParamProjectID}'
       StageName: !Ref ParamProjectEnviron
-      AccessLogSetting:
-        DestinationArn: !GetAtt LogGroup1.Arn
+      MethodSettings:
+        - LoggingLevel: INFO
+          ResourcePath: '/*' 
+          HttpMethod: '*' 
+          DataTraceEnabled: true  
+          MetricsEnabled: true   
   
   Func1:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub '${ParamProjectID}-hello'
+      Role: !GetAtt Role1.Arn
       Handler: src/hello/bin/hello
       Runtime: go1.x
       Tracing: Active
@@ -51,6 +50,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub '${ParamProjectID}-stores'
+      Role: !GetAtt Role1.Arn
       Handler: src/stores/bin/stores
       Runtime: go1.x
       Tracing: Active
@@ -74,15 +74,19 @@ Resources:
             Effect: Allow
             Action:
               - logs:*
-            Resource: !GetAtt LogGroup1.Arn
+            Resource: "*"
           -
             Sid: AllowLambdaAccess
             Effect: Allow
             Action:
               - lambda:*
-            Resource: 
-              - !GetAtt Func1.Arn
-              - !GetAtt Func2.Arn
+            Resource: "*"
+          -
+            Sid: AllowXrayAccess
+            Effect: Allow
+            Action:
+              - xray:*
+            Resource: "*"
 
   Role1:
     Type: 'AWS::IAM::Role'
@@ -96,6 +100,7 @@ Resources:
               Service:
                 - ec2.amazonaws.com
                 - lambda.amazonaws.com
+                - apigateway.amazonaws.com
             Action:
               - 'sts:AssumeRole'
       Path: /
