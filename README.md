@@ -13,7 +13,7 @@
     export PROJECT_NAME=play-with-stores
     
 ```
-Note - You do not need to export any variable for local development. You only need to change these variables while deploying it using CICD tools like Codepipeline, Jenkins, TravisCI etc.
+You can change these variables while deploying it using CICD tools like Codepipeline, Jenkins, TravisCI etc.
 
 #### 2. Deploy locally
 
