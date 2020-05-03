@@ -42,7 +42,7 @@ Check your APIs on above URL using curl -
     
 ```
 
-Note - You can check application logs in Cloudwatch.
+Note - You can get more details in Cloudwatch, Lambda, API Gateway console.
 
 
 #### 4. Destroy everything
